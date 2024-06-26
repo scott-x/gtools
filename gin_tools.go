@@ -9,14 +9,18 @@ import (
 	"github.com/go-playground/validator"
 )
 
-var trans ut.Translator //国际化翻译器
+var Trans ut.Translator //国际化翻译器
 
-func init() {
-	initTranslation() //初始化翻译器
+func InitTranslation() ut.Translator {
+	if err := initTrans("zh"); err != nil {
+		log.Panic("初始化翻译器失败")
+	}
+	log.Println("成功初始化翻译器")
+	return Trans
 }
 
-func HandleValidatorError(c *gin.Context, err error) {
-	log.Println("trans:", trans)
+// 优化Validator的error eg: "SignUpForm.email"` 改成 `"email"`
+func HandleValidatorError(c *gin.Context, err error, trans ut.Translator) {
 	errs, ok := err.(validator.ValidationErrors)
 	if !ok {
 		c.JSON(http.StatusOK, gin.H{
@@ -25,9 +29,9 @@ func HandleValidatorError(c *gin.Context, err error) {
 		})
 		return
 	}
-
 	c.JSON(http.StatusBadRequest, gin.H{
 		//errs.Translate(trans)的本质就是map[string]string
+		"code":  2002,
 		"error": fixStructKey(errs.Translate(trans)),
 	})
 }

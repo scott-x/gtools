@@ -2,6 +2,7 @@ package gtools
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
@@ -9,7 +10,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	zh_translations "github.com/go-playground/validator/v10/translations/zh"
-	"log"
 
 	"reflect"
 	"strings"
@@ -33,27 +33,20 @@ func initTrans(locale string) (err error) {
 		enT := en.New() //英文翻译器
 		//第一个参数是备用的语言环境 后面的参数是应该被支持的语言环境
 		uni := ut.New(enT, zhT, enT)
-		trans, ok = uni.GetTranslator(locale)
+		Trans, ok = uni.GetTranslator(locale)
 		if !ok {
 			return fmt.Errorf("uni.GetTranslator(%s)", locale)
 		}
 
 		switch locale {
 		case "en":
-			en_translations.RegisterDefaultTranslations(v, trans)
+			en_translations.RegisterDefaultTranslations(v, Trans)
 		case "zh":
-			zh_translations.RegisterDefaultTranslations(v, trans)
+			zh_translations.RegisterDefaultTranslations(v, Trans)
 		default:
-			en_translations.RegisterDefaultTranslations(v, trans)
+			en_translations.RegisterDefaultTranslations(v, Trans)
 		}
 		return
 	}
 	return
-}
-
-func initTranslation() {
-	if err := initTrans("zh"); err != nil {
-		log.Panic("初始化翻译器错误")
-	}
-	log.Println("成功初始化翻译器")
 }
