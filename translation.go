@@ -55,4 +55,5 @@ func initTranslation() {
 	if err := initTrans("zh"); err != nil {
 		log.Panic("初始化翻译器错误")
 	}
+	log.Println("成功初始化翻译器")
 }
