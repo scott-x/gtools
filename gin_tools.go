@@ -1,6 +1,8 @@
 package gtools
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator"
@@ -20,6 +22,6 @@ func HandleValidatorError(c *gin.Context, err error) {
 		return
 	}
 	//errs.Translate(trans)的本质就是map[string]string
+	log.Panicln("trans:", trans)
 	resp.Error(c, 2002, fixStructKey(errs.Translate(trans)))
-	return
 }
