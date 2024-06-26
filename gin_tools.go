@@ -2,11 +2,11 @@ package gtools
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator"
-	"github.com/scott-x/resp"
 )
 
 var trans ut.Translator //国际化翻译器
@@ -16,12 +16,17 @@ func init() {
 }
 
 func HandleValidatorError(c *gin.Context, err error) {
+	log.Println("trans:", trans)
 	errs, ok := err.(validator.ValidationErrors)
 	if !ok {
-		resp.Error(c, 2001, err.Error())
+		c.JSON(http.StatusOK, gin.H{
+			"error": errs.Error(),
+		})
 		return
 	}
-	//errs.Translate(trans)的本质就是map[string]string
-	log.Panicln("trans:", trans)
-	resp.Error(c, 2002, fixStructKey(errs.Translate(trans)))
+
+	c.JSON(http.StatusBadRequest, gin.H{
+		//errs.Translate(trans)的本质就是map[string]string
+		"error": fixStructKey(errs.Translate(trans)),
+	})
 }
