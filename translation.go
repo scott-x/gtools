@@ -33,18 +33,18 @@ func initTrans(locale string) (err error) {
 		enT := en.New() //英文翻译器
 		//第一个参数是备用的语言环境 后面的参数是应该被支持的语言环境
 		uni := ut.New(enT, zhT, enT)
-		Trans, ok = uni.GetTranslator(locale)
+		trans, ok = uni.GetTranslator(locale)
 		if !ok {
 			return fmt.Errorf("uni.GetTranslator(%s)", locale)
 		}
 
 		switch locale {
 		case "en":
-			en_translations.RegisterDefaultTranslations(v, Trans)
+			en_translations.RegisterDefaultTranslations(v, trans)
 		case "zh":
-			zh_translations.RegisterDefaultTranslations(v, Trans)
+			zh_translations.RegisterDefaultTranslations(v, trans)
 		default:
-			en_translations.RegisterDefaultTranslations(v, Trans)
+			en_translations.RegisterDefaultTranslations(v, trans)
 		}
 		return
 	}
