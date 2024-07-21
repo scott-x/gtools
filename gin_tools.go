@@ -29,7 +29,10 @@ func ValidateBindError(c *gin.Context, err error) {
 		})
 		return
 	}
-	c.JSON(http.StatusBadRequest, gin.H{
+	//http.StatusBadRequest 改成了 http.StatusOK 否则react前端请求 network会报400错误，导致无法获取后端接口数据 而无法正确展示error msg
+	//详情请看 https://statics.scott-xiong.com/docusaurus/0aaa2bb2642443619e1f51863aa7884e.png
+	//c.JSON(http.StatusBadRequest, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		//errs.Translate(trans)的本质就是map[string]string
 		"code":  2002,
 		"error": fixStructKey(errs.Translate(trans)),
